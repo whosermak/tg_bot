@@ -69,6 +69,7 @@ for video in data['videos']:
             )
         )
 
+print("Данные импортированы!")
 conn.commit()
 cur.close()
 conn.close()

@@ -8,7 +8,7 @@ router = Router()
 
 @router.message(Command(commands=["start"]))
 async def start(message: types.Message):
-    await message.reply("Стартовое сообщение")
+    await message.reply("Дратути, задай мне вопрос по данным из бд и я на все отвечу!")
 
 
 
