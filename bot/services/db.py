@@ -24,10 +24,14 @@ async def execute(sql):
     ) as conn:
 
         async with conn.cursor() as cur:
-            await cur.execute(sql)
-            r = await cur.fetchone()
+            try:
+                await cur.execute(sql)
+                r = await cur.fetchone()
 
-            if not r or r[0] is None:
+                if not r or r[0] is None:
+                    return 0
+
+                return r[0]
+            except Exception as e:
+                print("Ошибка выполнения запроса: ", e)
                 return 0
-
-            return r[0]
