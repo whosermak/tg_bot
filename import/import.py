@@ -1,8 +1,26 @@
 import json
 import psycopg
 from datetime import datetime
+import time
 
-def time(s): 
+def wait_db():
+    while True:
+        try:
+            conn = psycopg.connect(
+                host="db",
+                dbname="bot_db",
+                user="appuser",
+                password="pass123"
+            )
+            conn.close()
+            break
+        except Exception:
+            time.sleep(2)
+wait_db()
+
+
+
+def toTime(s): 
     return datetime.fromisoformat(s)
 
 conn = psycopg.connect(
@@ -21,14 +39,14 @@ for video in data['videos']:
         "INSERT INTO videos (id, video_created_at, views_count, likes_count, reports_count, comments_count, creator_id, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
         (
             video["id"], 
-            time(video["video_created_at"]),
+            toTime(video["video_created_at"]),
             int(video["views_count"]),
             int(video["likes_count"]),
             int(video["reports_count"]),
             int(video["comments_count"]),
             video["creator_id"],
-            time(video["created_at"]),
-            time(video["updated_at"])
+            toTime(video["created_at"]),
+            toTime(video["updated_at"])
         )
     )
 
@@ -46,8 +64,8 @@ for video in data['videos']:
                 int(snap["delta_likes_count"]),
                 int(snap["delta_reports_count"]),
                 int(snap["delta_comments_count"]),
-                time(snap["created_at"]),
-                time(snap["updated_at"])
+                toTime(snap["created_at"]),
+                toTime(snap["updated_at"])
             )
         )
 

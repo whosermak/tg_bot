@@ -5,8 +5,10 @@ services:
         image: postgres:16
         container_name: pg
         restart: always
-        ports:
-            - "5432:5432"
+        environment:
+            POSTGRES_USER: appuser
+            POSTGRES_PASSWORD: pass123
+            POSTGRES_DB: bot_db
         volumes:
             - pgdata:/var/lib/postgresql/data
             - ./db/init:/docker-entrypoint-initdb.d
@@ -20,8 +22,6 @@ services:
         command: python import.py
         depends_on:
             - db
-        profiles:
-            - manual
     
     bot:
         build: ./bot
@@ -29,6 +29,7 @@ services:
         env_file: .env
         depends_on:
             - db
+            - import
 
     
 volumes:

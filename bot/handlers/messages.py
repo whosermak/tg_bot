@@ -1,7 +1,7 @@
 from aiogram import Router, types
 from aiogram.filters import Command
 from services.nlp import parse_text
-from services.db import execute
+from services.db import execute, wait_db
 
 router = Router()
 
@@ -19,4 +19,4 @@ async def handle_message(message: types.Message):
     sql = await parse_text(text)
     result = await execute(sql)
 
-    await message.answer(str(result) + " ... " + sql)
+    await message.answer(str(result))
