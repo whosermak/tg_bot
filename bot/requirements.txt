@@ -1,5 +1,6 @@
 aiogram
 python-telegram-bot
 python-dotenv
-groq
+gigachat 
 psycopg[binary]
+requests

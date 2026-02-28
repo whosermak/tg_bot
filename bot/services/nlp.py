@@ -1,9 +1,10 @@
-from groq import AsyncGroq
+from gigachat import GigaChat
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
-client = AsyncGroq(api_key=os.getenv("GROQ_API_KEY"))
+API_KEY=os.getenv("GIGACHAT_API_KEY")
+
 
 sys_promt = """
 Ты генерируешь SQL для PostgreSQL.
@@ -68,17 +69,14 @@ updated_at TIMESTAMPTZ
 Период "с X по Y включительно" = >= X 00:00:00 и <= Y 23:59:59
 
 Всегда возвращай ровно одну строку и один столбец.
+
+ЗАПРОС ПОЛЬЗОВАТЕЛЯ: 
 """
 
+
 async def parse_text(q):
-    r = await client.chat.completions.create(
-        messages=[
-            { "role": "system", "content": sys_promt },
-            { "role": "user", "content": q }
-        ],
+    async with GigaChat(credentials=API_KEY, verify_ssl_certs=False) as client:
+        r = await client.achat(sys_promt + q)
 
-        model="llama-3.3-70b-versatile"
-    )
-
-    sql = r.choices[0].message.content.strip()
-    return sql.replace("```sql", "").replace("```", "").strip()
+        sql = r.choices[0].message.content.strip()
+        return sql.replace("```sql", "").replace("```", "").strip()
